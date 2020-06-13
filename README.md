@@ -4,11 +4,11 @@ Concurrent [git pull][git-pull] executor for multiple git repositories.
 
 ![](demo.gif)
 
-[git-pull-all] is a command line tool to execute [git pull][git-pull] on multiple git repositories in parallel. Because it is asynchronous, it works really well especially for **many** projects and must be a lot faster than any synchronous ways, such as:
+[git-pull-all] is a command line tool to execute [git pull --rebase][git-pull --rebase] on multiple git repositories in parallel. Because it is asynchronous, it works really well especially for **many** projects and must be a lot faster than any synchronous ways, such as:
 
 ```sh
 #!/bin/sh
-find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
+find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull --rebase" \;
 ```
 
 ## Installation
@@ -33,7 +33,7 @@ Assume you have these files and directories:
     .git/
 ```
 
-When you run `git-pull-all` command on `~/Projects` directory, it should find child git repositories (in the above case *cool-examples* and *super-express*) then execute `git pull` on each of them.
+When you run `git-pull-all` command on `~/Projects` directory, it should find child git repositories (in the above case *cool-examples* and *super-express*) then execute `git pull --rebase` on each of them.
 
 ```
 $ cd ~/Projects
@@ -78,7 +78,7 @@ Assume you have these files and directories:
 ```
 
 
-When you run `git-pull-all -r` command on `~/Projects` directory, it should find all nested child git repositories (in the above case *cool-examples*, *super-express* and *confidential*) then execute `git pull` on each of them.
+When you run `git-pull-all -r` command on `~/Projects` directory, it should find all nested child git repositories (in the above case *cool-examples*, *super-express* and *confidential*) then execute `git pull --rebase` on each of them.
 
 
 ```

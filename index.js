@@ -94,13 +94,13 @@ function hasRemoteRepo(dir, callback) {
 }
 
 /**
- * Run "git pull" on the given directory.
+ * Run "git pull --rebase" on the given directory.
  *
  * @param  {String}   dir
  * @param  {Function} callback
  */
 function gitPull(dir, callback) {
-  var command = 'git pull';
+  var command = 'git pull --rebase';
   run(command, { cwd: dir }, function(err, stdout, stderr) {
     if (err) {
       var message = [
