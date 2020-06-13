@@ -1,7 +1,7 @@
 {
   "name": "git-pull-all",
   "version": "0.1.4",
-  "description": "Concurrent git pull executor for multiple git repositories.",
+  "description": "Concurrent 'git pull --rebase' executor for multiple git repositories.",
   "bin": {
     "git-pull-all": "cli.js"
   },
