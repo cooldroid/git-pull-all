@@ -1,7 +1,7 @@
 {
-  "name": "git-pull-all",
-  "version": "0.1.4",
-  "description": "Concurrent 'git pull --rebase' executor for multiple git repositories.",
+  "name": "@cooldroid/git-pull-all",
+  "version": "0.2.0",
+  "description": "Concurrent git pull executor for multiple git repositories.",
   "bin": {
     "git-pull-all": "cli.js"
   },
@@ -9,10 +9,10 @@
     "lint": "jshint *.js"
   },
   "dependencies": {
-    "async": "~0.9.0"
+    "async": "~0.9.2"
   },
   "devDependencies": {
-    "jshint": "^2.6.0"
+    "jshint": "^2.13.6"
   },
   "repostitory": {
     "type": "git",

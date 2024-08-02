@@ -11,6 +11,6 @@ var paramOne = argv.shift();
 var parentDir = cwd;
 
 if (paramOne && paramOne != '-r') {
-  parentDir = path.join(cwd, paramOne);
+  parentDir = paramOne;
 }
 gitPullAll(parentDir, isRecursive);

@@ -1,9 +1,14 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var join = require('path').join;
+var sep = require('path').sep;
 var basename = require('path').basename;
 
 var async = require('async');
+
+function dirname(path) {
+  return '\x1b[36m' + path.split(sep).slice(-2).join(sep) + '\x1b[39m';
+}
 
 /**
  * Return true if the given file path is a directory.
@@ -32,13 +37,14 @@ function isDirectory(file, callback) {
  * @param  {Function} callback
  */
 function isGitProject(dir, callback) {
-  fs.exists(join(dir, '.git'), function(ret) {
-    if (!ret) {
-      console.log('\033[36m' + basename(dir) + '/\033[39m');
-      console.log('Not a git repository');
-    }
-    callback(ret);
-  });
+  ret = fs.existsSync(join(dir, '.git'));
+  if (!ret) {
+    console.log(dirname(dir), ':', 'Not a git repository');
+  } else if (fs.existsSync(join(dir, '.git', '.skip'))) {
+    console.log(dirname(dir), ':', 'Skip this git repository');
+    ret = false;
+  }
+  callback(ret);
 }
 
 /**
@@ -48,9 +54,8 @@ function isGitProject(dir, callback) {
  * @param  {Function} callback
  */
 function isNotGitProject(dir, callback) {
-  fs.exists(join(dir, '.git'), function(ret) {
-    callback(!ret);
-  });
+  var ret = fs.existsSync(join(dir, '.git'));
+  callback(!ret);
 }
 
 /**
@@ -86,8 +91,7 @@ function hasRemoteRepo(dir, callback) {
       return callback(false);
     }
     if (!stdout) {
-      console.log('\033[36m' + basename(dir) + '/\033[39m');
-      console.log('Remote tracking repository is not defined');
+      console.log(dirname(dir), ':', 'Remote tracking repository is not defined');
     }
     callback(!!stdout);
   });
@@ -100,24 +104,27 @@ function hasRemoteRepo(dir, callback) {
  * @param  {Function} callback
  */
 function gitPull(dir, callback) {
-  var command = 'git pull --rebase';
+  var command = 'git pull --rebase --autostash --recurse-submodules';
   run(command, { cwd: dir }, function(err, stdout, stderr) {
     if (err) {
       var message = [
+        dirname(dir),
         'Something went wrong on "' + dir + '" ...',
-        'Command: ' + command,
+        // 'Command: ' + command,
         'Message: ' + err.message
       ].join('\n');
-      return callback(new Error(message));
+      console.log(message);
+      // return callback(new Error(message));
+    } else {
+      process.stdout.write(dirname(dir) + " : ");
+      if (stdout) {
+        process.stdout.write(stdout);
+      }
+      if (stderr) {
+        process.stdout.write(stderr);
+      }
     }
-    console.log('\033[36m' + basename(dir) + '/\033[39m');
-    if (stdout) {
-      process.stdout.write(stdout);
-    }
-    if (stderr) {
-      process.stdout.write(stderr);
-    }
-    callback();
+    return callback();
   });
 }
 
@@ -175,6 +182,8 @@ function pullFromDirectory(parent) {
             if (err) {
               console.log(err.message);
               return;
+            } else {
+              console.log('Done for folder:', '\x1b[32m' + parent.split(sep).slice(-2).join(sep) + '\x1b[39m');
             }
           });
         });
@@ -194,5 +203,4 @@ module.exports = function(parent, isRecursive) {
   }else{
     pullFromDirectory(parent);
   }
-  console.log('Done!');
 };
